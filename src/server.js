@@ -2,11 +2,15 @@ const express = require("express");
 const multer = require("multer");
 const sequelize = require("./config/database");
 const userRoutes = require("./routes/userRoutes");
+const bodyParser = require("body-parser");
 
-const upload = multer();
+// const upload = multer();
 const app = express();
 
-app.use(upload.any());
+// app.use(upload.any());
+// app.use(bodyParser.json());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/", userRoutes);
 
