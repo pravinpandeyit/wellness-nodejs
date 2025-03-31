@@ -20,3 +20,21 @@ exports.authenticateUser = (req, res, next) => {
     res.status(401).json({ message: "Error: " + error.message });
   }
 };
+
+exports.isAdmin = (req, res, next) => {
+  if (req.user.role !== 1) {
+    return res
+      .status(403)
+      .json({ message: "Access denied. Authorized Admin only!" });
+  }
+  next();
+};
+
+exports.isUser = (req, res, next) => {
+  if (req.user.role !== 2) {
+    return res
+      .status(403)
+      .json({ message: "Access denied. Please login first!" });
+  }
+  next();
+};

@@ -5,9 +5,16 @@ const {
   forgetPassword,
   changePassword,
   logout,
+  getProfile,
+  updateProfile,
 } = require("../controllers/user/authController");
-const { addJournal, updateJournal, getJournalById, deleteJournal } = require("../controllers/user/journalController");
-const { authenticateUser } = require("../middleware/authMiddleware");
+const {
+  addJournal,
+  updateJournal,
+  getJournalById,
+  deleteJournal,
+} = require("../controllers/user/journalController");
+const { authenticateUser, isUser } = require("../middleware/authMiddleware");
 const Router = express.Router();
 
 //auth routes
@@ -18,13 +25,13 @@ Router.post("/change-password", changePassword);
 Router.get("/logout", authenticateUser, logout);
 
 //journal routes
-Router.post("/journal/add", authenticateUser, addJournal);
-Router.put("/journal/update/:id", authenticateUser, updateJournal);
-Router.get("/journal/:id", authenticateUser, getJournalById);
-Router.delete("/journal/delete/:id", authenticateUser, deleteJournal);
+Router.post("/journal/add", authenticateUser, isUser, addJournal);
+Router.put("/journal/update/:id", authenticateUser, isUser, updateJournal);
+Router.get("/journal/:id", authenticateUser, isUser, getJournalById);
+Router.delete("/journal/delete/:id", authenticateUser, isUser, deleteJournal);
 
-
-
-
+//profile routes
+Router.get("/profile", authenticateUser, getProfile);
+Router.put("/profile/update", authenticateUser, updateProfile);
 
 module.exports = Router;

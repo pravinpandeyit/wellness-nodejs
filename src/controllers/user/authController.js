@@ -34,7 +34,7 @@ exports.register = async (req, res) => {
       status: 1,
     });
 
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ userId: user.id, role: user.role_id }, process.env.JWT_SECRET, {
       expiresIn: "6h",
     });
 
@@ -70,7 +70,7 @@ exports.login = async (req, res) => {
       return res.status(400).json({ message: "Invalid email or password!" });
     }
 
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ userId: user.id, role: user.role_id }, process.env.JWT_SECRET, {
       expiresIn: "6h",
     });
     return res.json({
@@ -148,4 +148,54 @@ exports.logout = async (req, res) => {
 
   blacklist.add(token);
   res.json({ message: "Logged out successfully" });
+};
+
+exports.getProfile = async (req, res) => {
+  try {
+    const loggedInUser = req.user;
+
+    const user = await User.findOne({
+      where: { id: loggedInUser.userId },
+      attributes: ["id", "fullname", "email", "phone"],
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: "User not found!" });
+    }
+
+    return res.json({ message: "User Details", data: user });
+  } catch (error) {
+    res.status(500).json({ message: "Error: " + error.message });
+  }
+};
+
+exports.updateProfile = async (req, res) => {
+  try {
+    const loggedInUser = req.user;
+
+    const { fullname, phone } = req.body;
+
+    if (!fullname || !phone) {
+      return res
+        .status(400)
+        .json({ message: "Please enter all the required fields" });
+    }
+
+    const user = await User.findOne({
+      where: { id: loggedInUser.userId },
+      attributes: ["id", "fullname", "email", "phone"],
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: "User not found!" });
+    }
+
+    user.fullname = fullname;
+    user.phone = phone;
+    user.save();
+
+    return res.json({ message: "User details updated successfully!", data: user });
+  } catch (error) {
+    res.status(500).json({ message: "Error: " + error.message });
+  }
 };
