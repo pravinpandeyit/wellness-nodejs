@@ -60,7 +60,7 @@ exports.login = async (req, res) => {
     }
 
     const { email, password } = req.body;
-    let user = await User.findOne({ where: { email: email, role_id: 2 } });
+    let user = await User.findOne({ where: { email: email } });
     if (!user) {
       return res.status(400).json({ message: "Invalid email or password!" });
     }
