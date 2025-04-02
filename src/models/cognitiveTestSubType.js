@@ -16,24 +16,24 @@ const CognitiveTestSubType = sequelize.define(
         model: "cognitive_test_types",
         key: "id",
       },
-      sub_type: {
-        type: DataTypes.STRING(200),
-        allowNull: false,
-      },
-      status: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      created_at: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW,
-      },
-      updated_at: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW,
-      },
+    },
+    sub_type: {
+      type: DataTypes.STRING(200),
+      allowNull: false,
+    },
+    status: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+    updated_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
     },
   },
   {
