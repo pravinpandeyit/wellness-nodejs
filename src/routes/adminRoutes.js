@@ -7,6 +7,7 @@ const {
   addCategory,
   updateCategory,
   deleteCategory,
+  getAllCategory,
   addSubCategory,
   updateSubCategory,
   deleteSubCategory,
@@ -28,6 +29,8 @@ Router.delete(
   isAdmin,
   deleteCategory
 );
+Router.post("/category-list", authenticateUser, isAdmin, getAllCategory);
+
 
 //subcategory routes
 Router.post("/sub-category/add", authenticateUser, isAdmin, addSubCategory);

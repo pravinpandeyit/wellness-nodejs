@@ -14,6 +14,7 @@ const {
   getJournalById,
   deleteJournal,
 } = require("../controllers/user/journalController");
+const { getCategoriesWithSubcategories } = require("../controllers/user/generalUserController");
 const { authenticateUser, isUser } = require("../middleware/authMiddleware");
 const Router = express.Router();
 
@@ -33,5 +34,8 @@ Router.delete("/journal/delete/:id", authenticateUser, isUser, deleteJournal);
 //profile routes
 Router.get("/profile", authenticateUser, getProfile);
 Router.put("/profile/update", authenticateUser, updateProfile);
+
+//general routes
+Router.get("/categories-with-subcategories", authenticateUser, getCategoriesWithSubcategories);
 
 module.exports = Router;

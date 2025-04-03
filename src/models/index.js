@@ -11,6 +11,20 @@ Journal.belongsToMany(Tag, {
 Tag.belongsToMany(Journal, { through: "journal_tags", foreignKey: "tag_id" });
 
 Journal.belongsTo(User, { foreignKey: "user_id" });
-CognitiveTestType.hasMany(CognitiveTestSubType, { foreignKey: "parent_id" });
 
-module.exports = { Journal, Tag, User };
+CognitiveTestType.hasMany(CognitiveTestSubType, {
+  foreignKey: "parent_id",
+  as: "subcategories", 
+});
+CognitiveTestSubType.belongsTo(CognitiveTestType, {
+  foreignKey: "parent_id",
+  as: "category",
+});
+
+module.exports = {
+  Journal,
+  Tag,
+  User,
+  CognitiveTestType,
+  CognitiveTestSubType,
+};

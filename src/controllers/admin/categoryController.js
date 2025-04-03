@@ -73,6 +73,14 @@ exports.deleteCategory = async (req, res) => {
   }
 };
 
+exports.getAllCategory = async (req, res) => {
+  try {
+    res.send("get all category");
+  } catch (error) {
+    res.status(500).json({ message: "Error: " + error.message });
+  }
+};
+
 exports.addSubCategory = async (req, res) => {
   try {
     const { category_id, title } = req.body;
