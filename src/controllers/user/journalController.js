@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const { Journal, Tag, User } = require("../../models");
 const { journalValidation } = require("../../validations/journalValidation");
 
@@ -119,7 +120,37 @@ exports.deleteJournal = async (req, res) => {
 
     await journal.setTags([]);
     await journal.destroy();
-    return res.json({message:"Journal deleted successfully!"});
+    return res.json({ message: "Journal deleted successfully!" });
+  } catch (error) {
+    res.status(500).json({ message: "Error: " + error.message });
+  }
+};
+
+exports.journalList = async (req, res) => {
+  try {
+    const { title } = req.query;
+
+    const whereCondition = { status: 1 };
+
+    if (title) {
+      whereCondition.title = {
+        [Op.like]: `%${title}%`,
+      };
+    }
+
+    const journals = await Journal.findAll({
+      where: whereCondition,
+      attributes: ["id", "title", "notes"],
+      include: [
+        {
+          model: Tag,
+          attributes: ["id", "name", "status"],
+          through: { attributes: [] },
+        },
+      ],
+      order: [["created_at", "DESC"]],
+    });
+    return res.json({ message: "Journal List", journals });
   } catch (error) {
     res.status(500).json({ message: "Error: " + error.message });
   }
