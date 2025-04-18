@@ -16,6 +16,7 @@ const {
   journalList,
 } = require("../controllers/user/journalController");
 const { home } = require("../controllers/user/homeController");
+const { addMood } = require("../controllers/user/moodController");
 const {
   getCategoriesWithSubcategories,
 } = require("../controllers/user/generalUserController");
@@ -31,6 +32,9 @@ Router.get("/logout", authenticateUser, logout);
 
 //home routes
 Router.get("/home", authenticateUser, isUser, home);
+
+//mood routes
+Router.post("/add-mood", authenticateUser, isUser, addMood);
 
 //journal routes
 Router.post("/journal/add", authenticateUser, isUser, addJournal);
