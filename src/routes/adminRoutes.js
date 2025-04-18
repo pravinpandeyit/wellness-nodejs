@@ -12,6 +12,7 @@ const {
   updateSubCategory,
   deleteSubCategory,
 } = require("../controllers/admin/categoryController");
+const { addTest, updateTest, deleteTest } = require("../controllers/admin/testController");
 const { authenticateUser, isAdmin } = require("../middleware/authMiddleware");
 
 const Router = express.Router();
@@ -31,7 +32,6 @@ Router.delete(
 );
 Router.post("/category-list", authenticateUser, isAdmin, getAllCategory);
 
-
 //subcategory routes
 Router.post("/sub-category/add", authenticateUser, isAdmin, addSubCategory);
 Router.put(
@@ -46,5 +46,10 @@ Router.delete(
   isAdmin,
   deleteSubCategory
 );
+
+//test routes
+Router.post("/test/add", authenticateUser, isAdmin, addTest);
+Router.put("/test/update/:id", authenticateUser, isAdmin, updateTest);
+Router.delete("/test/delete/:id", authenticateUser, isAdmin, deleteTest);
 
 module.exports = Router;
