@@ -12,7 +12,12 @@ const {
   updateSubCategory,
   deleteSubCategory,
 } = require("../controllers/admin/categoryController");
-const { addTest, updateTest, deleteTest } = require("../controllers/admin/testController");
+const {
+  addTest,
+  updateTest,
+  deleteTest,
+} = require("../controllers/admin/testController");
+const { addQuiz } = require("../controllers/admin/quizController");
 const { authenticateUser, isAdmin } = require("../middleware/authMiddleware");
 
 const Router = express.Router();
@@ -51,5 +56,9 @@ Router.delete(
 Router.post("/test/add", authenticateUser, isAdmin, addTest);
 Router.put("/test/update/:id", authenticateUser, isAdmin, updateTest);
 Router.delete("/test/delete/:id", authenticateUser, isAdmin, deleteTest);
+
+
+//quiz routes
+Router.post("/quiz/add", authenticateUser, isAdmin, addQuiz);
 
 module.exports = Router;
