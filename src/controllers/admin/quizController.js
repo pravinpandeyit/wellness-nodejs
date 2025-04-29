@@ -119,7 +119,48 @@ exports.updateQuiz = async (req, res) => {
     await quiz.save();
 
     return res.json({ message: "Quiz updated successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error: " + error.message });
+  }
+};
 
+exports.updateQuestion = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ message: "ID is required" });
+    }
+
+    const { title, description, marks } = req.body;
+    if (!title && !description && !marks) {
+      return res
+        .status(400)
+        .json({ message: "Please fill all the required details" });
+    }
+
+    const question = await TestQuizQuestion.findByPk(id);
+    question.title = title;
+    question.description = description;
+    question.marks = marks;
+    await question.save();
+
+    return res.json({ message: "Question updated successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error: " + error.message });
+  }
+};
+
+exports.deleteQuestion = async(req, res) => {
+  try {
+    const {id} = req.params;
+    if(!id){
+      return res.status(400).json({ message: "ID is required" });
+    }
+    const question = await TestQuizQuestion.findByPk(id);
+
+    // delete option also before deleting the question
+
+    res.send("delete a question");
   } catch (error) {
     res.status(500).json({ message: "Error: " + error.message });
   }
