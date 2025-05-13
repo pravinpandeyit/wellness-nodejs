@@ -4,6 +4,7 @@ const TestQuestionOption = require("../../models/testQuestionOption");
 const {
   quizValidation,
   questionValidation,
+  optionValidation,
 } = require("../../validations/quizValidation");
 const sequelize = require("../../config/database");
 
@@ -150,17 +151,116 @@ exports.updateQuestion = async (req, res) => {
   }
 };
 
-exports.deleteQuestion = async(req, res) => {
+exports.deleteQuestion = async (req, res) => {
   try {
-    const {id} = req.params;
-    if(!id){
+    const { id } = req.params;
+    if (!id) {
       return res.status(400).json({ message: "ID is required" });
     }
     const question = await TestQuizQuestion.findByPk(id);
+    if (!question) {
+      return res.status(400).json({ message: "Question not found!" });
+    }
 
-    // delete option also before deleting the question
+    await TestQuestionOption.destroy({ where: { question_id: id } });
+    await TestQuizQuestion.destroy({ where: { id } });
 
-    res.send("delete a question");
+    return res.json({ message: "Question deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error: " + error.message });
+  }
+};
+
+exports.deleteQuiz = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ message: "ID is required!" });
+    }
+
+    const quiz = await TestQuiz.findOne({ where: { id } });
+    if (!quiz) {
+      return res.status(400).json({ message: "Quiz not found!" });
+    }
+
+    const questions = await TestQuizQuestion.findAll({
+      where: { quiz_id: id },
+    });
+
+    for (const question of questions) {
+      await TestQuestionOption.destroy({ where: { question_id: question.id } });
+      await question.destroy();
+    }
+
+    await quiz.destroy();
+    return res.json({ message: "Quiz deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error: " + error.message });
+  }
+};
+
+exports.addOption = async (req, res) => {
+  try {
+    const { error } = optionValidation.validate(req.body);
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message });
+    }
+
+    const { questionId } = req.params;
+    if (!questionId) {
+      return res.status(400).json({ message: "ID is required!" });
+    }
+
+    const question = await TestQuizQuestion.findByPk(questionId);
+    if (!question) {
+      return res.status(404).json({ message: "Question not found!" });
+    }
+
+    const options = req.body;
+
+    // if the new options is true, so firstly make the existing options false in db then add new options
+    const correctCount = options.filter(
+      (opt) => opt.is_correct === true
+    ).length;
+
+    if (correctCount > 0) {
+      await TestQuestionOption.update(
+        { is_correct: 0 },
+        { where: { question_id: questionId } }
+      );
+    }
+
+    const optionWithQuestionId = options.map((option) => ({
+      question_id: questionId,
+      answer: option.answer,
+      is_correct: option.is_correct ? 1 : 0,
+    }));
+
+    await TestQuestionOption.bulkCreate(optionWithQuestionId);
+
+    return res.json({ message: "Options added successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error: " + error.message });
+  }
+};
+
+exports.updateOption = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ message: "ID is required!" });
+    }
+
+    const { answer } = req.body;
+
+    let option = await TestQuestionOption.findByPk(id);
+    if (!option) {
+      return res.status(400).json({ message: "Option not found!" });
+    }
+
+    option.answer = answer;
+    option.save();
+    return res.json({ message: "Option updated successfully" });
   } catch (error) {
     res.status(500).json({ message: "Error: " + error.message });
   }
