@@ -52,18 +52,12 @@ A robust Node.js backend for a wellness platform, providing modules for cognitiv
    npm install
    ```
 
-3. **Configure environment variables:**
-   - Create a `.env` file in the root directory.
-   - Add your MySQL credentials and other environment variables:
+3. **Set up environment variables:**
+   - Copy the example environment file and edit it with your local configuration:
+     ```bash
+     cp .env.example .env
      ```
-     DB_HOST=localhost
-     DB_USER=your_mysql_user
-     DB_PASS=your_mysql_password
-     DB_NAME=wellness_db
-     DB_DIALECT=mysql
-     JWT_SECRET=your_jwt_secret
-     PORT=3000
-     ```
+   - Open `.env` and update the values as needed for your MySQL setup and secrets.
 
 4. **Set up the database:**
    - Ensure your MySQL server is running.
