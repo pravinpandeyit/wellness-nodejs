@@ -17,10 +17,22 @@ const {
   updateTest,
   deleteTest,
 } = require("../controllers/admin/testController");
-const { addQuiz, addQuestion, updateQuiz, updateQuestion, deleteQuestion } = require("../controllers/admin/quizController");
+const {
+  addQuiz,
+  addQuestion,
+  updateQuiz,
+  updateQuestion,
+  deleteQuestion,
+  deleteQuiz,
+  addOption,
+  updateOption
+} = require("../controllers/admin/quizController");
 const { authenticateUser, isAdmin } = require("../middleware/authMiddleware");
 
 const Router = express.Router();
+
+
+
 
 //user routes
 Router.get("/user-list", authenticateUser, isAdmin, getUserList);
@@ -35,7 +47,7 @@ Router.delete(
   isAdmin,
   deleteCategory
 );
-Router.post("/category-list", authenticateUser, isAdmin, getAllCategory);
+Router.get("/category-list", authenticateUser, isAdmin, getAllCategory);
 
 //subcategory routes
 Router.post("/sub-category/add", authenticateUser, isAdmin, addSubCategory);
@@ -57,12 +69,24 @@ Router.post("/test/add", authenticateUser, isAdmin, addTest);
 Router.put("/test/update/:id", authenticateUser, isAdmin, updateTest);
 Router.delete("/test/delete/:id", authenticateUser, isAdmin, deleteTest);
 
-
 //quiz routes
 Router.post("/quiz/add", authenticateUser, isAdmin, addQuiz);
 Router.post("/quiz/question/add", authenticateUser, isAdmin, addQuestion);
 Router.put("/quiz/update/:id", authenticateUser, isAdmin, updateQuiz);
-Router.put("/quiz/question/update/:id", authenticateUser, isAdmin, updateQuestion);
-Router.delete("/quiz/question/delete/:id", authenticateUser, isAdmin, deleteQuestion);
+Router.put(
+  "/quiz/question/update/:id",
+  authenticateUser,
+  isAdmin,
+  updateQuestion
+);
+Router.delete(
+  "/quiz/question/delete/:id",
+  authenticateUser,
+  isAdmin,
+  deleteQuestion
+);
+Router.delete("/quiz/delete/:id", authenticateUser, isAdmin, deleteQuiz);
+Router.post("/quiz/question/option/add/:questionId", authenticateUser, isAdmin, addOption);
+Router.put("/quiz/question/option/update/:id", authenticateUser, isAdmin, updateOption);
 
 module.exports = Router;

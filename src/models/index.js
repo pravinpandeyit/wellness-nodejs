@@ -16,6 +16,7 @@ CognitiveTestType.hasMany(CognitiveTestSubType, {
   foreignKey: "parent_id",
   as: "subcategories", 
 });
+
 CognitiveTestSubType.belongsTo(CognitiveTestType, {
   foreignKey: "parent_id",
   as: "category",

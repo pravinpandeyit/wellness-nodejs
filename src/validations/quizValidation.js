@@ -52,4 +52,14 @@ const questionValidation = Joi.object({
     .required(), // At least 1 question
 });
 
-module.exports = { quizValidation, questionValidation };
+const optionValidation = Joi.array()
+  .items(
+    Joi.object({
+      answer: Joi.string().min(1).required(),
+      is_correct: Joi.boolean().required(),
+    })
+  )
+  .min(1)
+  .required();
+
+module.exports = { quizValidation, questionValidation, optionValidation };
